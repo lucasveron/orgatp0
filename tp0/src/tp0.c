@@ -380,6 +380,27 @@ int executeByMenu(int argc, char *argv[]) {
 		return INCORRECT_MENU;
 	}
 
+	if (argc == 4) {
+		char * firstKey = argv[1];
+		char * firstValue = argv[2];
+
+		char * secondKey = argv[3];
+
+		// / -i fileInput -o fileOutput
+		if ((strcmp("-i", firstKey) == 0 || strcmp("--input", firstKey) == 0)
+				&& (strcmp("-o", secondKey) == 0 || strcmp("--output", secondKey) == 0)) {
+			return executeWithDefaultOutput(firstValue);
+		}
+
+		// / -o fileOutput -i fileInput
+		if ((strcmp("-i", secondKey) == 0 || strcmp("--input", secondKey) == 0)
+				&& (strcmp("-o", firstKey) == 0 || strcmp("--output", firstKey) == 0)) {
+			return executeWithDefaultInput(firstValue);
+		}
+
+		return INCORRECT_MENU;
+	}
+
 	if (argc == 5) {
 		char * firstKey = argv[1];
 		char * firstValue = argv[2];
