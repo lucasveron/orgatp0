@@ -25,7 +25,8 @@ enum ParameterState {
 char * toLowerCase(char * word, int quantityCharacterInWord) {
 	char * wordLowerCase = (char *) malloc(quantityCharacterInWord);
 
-	for (int i = 0; i < quantityCharacterInWord; i++) {
+	int i;
+	for (i = 0; i < quantityCharacterInWord; i++) {
 		/* ASCII:
 		 * 		A - Z = [65 - 90]
 		 * 		a - z = [97 - 122]
@@ -136,7 +137,9 @@ int verifyPalindromic(char * word, int quantityCharacterInWord) {
 	char * wordReverse = (char *) malloc(quantityCharacterInWord);
 	int quantityCharacterInWordWithoutEnd = quantityCharacterInWord - 1;
 	int last = quantityCharacterInWordWithoutEnd - 1; // I take the end of word and keep in mind that it starts at zero.
-	for (int i = 0; i < quantityCharacterInWordWithoutEnd; i++) {
+
+	int i;
+	for (i = 0; i < quantityCharacterInWordWithoutEnd; i++) {
 		wordReverse[i] = word[last];
 		last --;
 	}
@@ -185,7 +188,6 @@ int executeProcess(FILE * fileInput, FILE * fileOutput) {
 	char character = fgetc(fileInput);
 	char * buffer = NULL;
 	int quantityCharacterInWord = 0;
-	int isFirstLine = TRUE;
 	while (character != EOF) {
 		if (isKeywords(character) == TRUE) {
 			buffer = (char *) realloc(buffer, 1);
@@ -196,22 +198,16 @@ int executeProcess(FILE * fileInput, FILE * fileOutput) {
 			buffer[quantityCharacterInWord] = '\0';
 			quantityCharacterInWord ++;
 			if (verifyPalindromic(buffer, quantityCharacterInWord) == TRUE) {
-				if (isFirstLine == FALSE) {
-					int result = fputs("\n", fileOutput);
-					if (result == EOF) {
-						fprintf(stderr, "[Error] Error al escribir en el archivo output el salto de línea.");
-						return ERROR_FILE;
-					}
-				}
-
 				int result = fputs(buffer, fileOutput);
 				if (result == EOF) {
 					fprintf(stderr, "[Error] Error al escribir en el archivo output la palabra %s", buffer);
 					return ERROR_FILE;
 				}
 
-				if (isFirstLine == TRUE) {
-					isFirstLine = FALSE;
+				result = fputc('\n', fileOutput);
+				if (result == EOF) {
+					fprintf(stderr, "[Error] Error al escribir en el archivo output el salto de línea.");
+					return ERROR_FILE;
 				}
 			}
 
