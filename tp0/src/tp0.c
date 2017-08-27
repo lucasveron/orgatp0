@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define VERSION 1
+#define VERSION "1.1"
 
 #define TRUE 0
 #define FALSE 1
@@ -256,7 +256,7 @@ int executeHelp() {
 }
 
 int executeVersion() {
-	fprintf(stdout, "Version: \"%d\" \n", VERSION);
+	fprintf(stdout, "Version: \"%\" \n", VERSION);
 
 	return OKEY;
 }
@@ -375,27 +375,6 @@ int executeByMenu(int argc, char *argv[]) {
 		// / -o fileOutput
 		if (strcmp("-o", key) == 0 || strcmp("--output", key) == 0) {
 			return executeWithDefaultInput(value);
-		}
-
-		return INCORRECT_MENU;
-	}
-
-	if (argc == 4) {
-		char * firstKey = argv[1];
-		char * firstValue = argv[2];
-
-		char * secondKey = argv[3];
-
-		// / -i fileInput -o fileOutput
-		if ((strcmp("-i", firstKey) == 0 || strcmp("--input", firstKey) == 0)
-				&& (strcmp("-o", secondKey) == 0 || strcmp("--output", secondKey) == 0)) {
-			return executeWithDefaultOutput(firstValue);
-		}
-
-		// / -o fileOutput -i fileInput
-		if ((strcmp("-i", secondKey) == 0 || strcmp("--input", secondKey) == 0)
-				&& (strcmp("-o", firstKey) == 0 || strcmp("--output", firstKey) == 0)) {
-			return executeWithDefaultInput(firstValue);
 		}
 
 		return INCORRECT_MENU;
