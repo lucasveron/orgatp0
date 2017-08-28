@@ -1,6 +1,0 @@
-#Test de una frase con 2 palabras palindromas. Una distinta y otra igual
-
-Ojo con el ojo
-
-Del oso polar sus garras temer
-

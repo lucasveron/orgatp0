@@ -1,7 +1,0 @@
-#Test con simbolos. Como no son componentes lexicos, no deberian ser impresos
-
-Testeamos el simbolo -(NO lexico)
-
-Tambien los simbolos --,---,-_-,_-_,__,___
-
-Que sucede con los asentos? Osó no debería imprimirse
