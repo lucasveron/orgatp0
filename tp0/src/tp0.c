@@ -2,9 +2,9 @@
  ============================================================================
  Name        : tp0.c
  Author      : grupo orga 66.20
- Version     :
+ Version     : 1.1
  Copyright   : Orga6620
- Description : Hello World in C, Ansi-style
+ Description : Trabajo practico 0: Infraestructura basica
  ============================================================================
  */
 
@@ -129,13 +129,17 @@ char * toLowerCase(char * word, int quantityCharacterInWord) {
 }
 
 int verifyPalindromic(char * word, int quantityCharacterInWord) {
-	if (word == NULL || quantityCharacterInWord <= 2) {
-		//TODO VERIFICAR LA CANTIDAD VALIDA - 2 xq tiene el caracter de fin
+	int quantityCharacterInWordWithoutEnd = quantityCharacterInWord - 1;
+	if (word == NULL || quantityCharacterInWordWithoutEnd <= 0) {
 		return FALSE;
 	}
 
+	if (word != NULL && quantityCharacterInWord && quantityCharacterInWordWithoutEnd == 1) {
+		// The word has one character
+		return TRUE;
+	}
+
 	char * wordReverse = (char *) malloc(quantityCharacterInWord);
-	int quantityCharacterInWordWithoutEnd = quantityCharacterInWord - 1;
 	int last = quantityCharacterInWordWithoutEnd - 1; // I take the end of word and keep in mind that it starts at zero.
 
 	int i;
@@ -256,7 +260,7 @@ int executeHelp() {
 }
 
 int executeVersion() {
-	fprintf(stdout, "Version: \"%\" \n", VERSION);
+	fprintf(stdout, "Version: \"%s\" \n", VERSION);
 
 	return OKEY;
 }
@@ -379,6 +383,27 @@ int executeByMenu(int argc, char *argv[]) {
 
 		return INCORRECT_MENU;
 	}
+
+	if (argc == 4) {
+	    char * firstKey = argv[1];
+	    char * firstValue = argv[2];
+
+	    char * secondKey = argv[3];
+
+	    // / -i fileInput -o fileOutput
+	    if ((strcmp("-i", firstKey) == 0 || strcmp("--input", firstKey) == 0)
+	        && (strcmp("-o", secondKey) == 0 || strcmp("--output", secondKey) == 0)) {
+	      return executeWithDefaultOutput(firstValue);
+	    }
+
+	    // / -o fileOutput -i fileInput
+	    if ((strcmp("-i", secondKey) == 0 || strcmp("--input", secondKey) == 0)
+	        && (strcmp("-o", firstKey) == 0 || strcmp("--output", firstKey) == 0)) {
+	      return executeWithDefaultInput(firstValue);
+	    }
+
+	    return INCORRECT_MENU;
+	  }
 
 	if (argc == 5) {
 		char * firstKey = argv[1];
