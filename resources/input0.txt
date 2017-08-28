@@ -1,0 +1,7 @@
+#Provamos que 3 lineas con palabras palindromas distintas
+
+Ojo con la entrega del tp0
+
+El Oso es un animal
+
+Una provincia argentina es Neuquen

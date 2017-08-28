@@ -1,0 +1,9 @@
+#Test de numeros palindromos y numeros no palindromos.
+
+Es 3 un buen numero?
+
+17 es un buen numero
+
+33 es palindromo.
+
+33 es palindromo y 434 también. 123 no lo es
