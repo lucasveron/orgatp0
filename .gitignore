@@ -1,5 +1,5 @@
 #Some of these are related to eclipse. So i keep them out of my repo
-/tp0/.cproject
-/tp0/.dep/
-/tp0/.project
-/tp0/.settings/
+#/tp0/.cproject
+#/tp0/.dep/
+#/tp0/.project
+#/tp0/.settings/
