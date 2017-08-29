@@ -36,7 +36,7 @@ char * toLowerCase(char * word, int quantityCharacterInWord) {
 		 */
 		char character =  word[i];
 		if (character >= 65 && character <= 90) {
-			character = tolower(character);
+			character += 32;
 		}
 
 		wordLowerCase[i] = character;
@@ -185,10 +185,6 @@ int executeVersion() {
 }
 
 int executeWithDefaultOutput(char * pathInput) {
-	if (strcmp("-", pathInput) == 0){
-		return executeWithDefaultParameters();
-	}
-
 	FILE * fileInput = fopen(pathInput, "r"); // Opens an existing text file for reading purpose.
 	if (fileInput == NULL) {
 		fprintf(stderr, "[Error] El archivo de input no pudo ser abierto para lectura: %s \n", pathInput);
@@ -211,10 +207,6 @@ int executeWithDefaultOutput(char * pathInput) {
 }
 
 int executeWithDefaultInput(char * pathOutput) {
-	if (strcmp("-", pathOutput) == 0){
-		return executeWithDefaultParameters();
-	}
-
 	FILE * fileInput = stdin;
 
 	FILE * fileOutput = fopen(pathOutput, "w"); // Opens a text file for writing. Pace the content.
@@ -237,13 +229,6 @@ int executeWithDefaultInput(char * pathOutput) {
 }
 
 int executeWithParameters(char * pathInput, char * pathOutput) {
-	if (strcmp("-", pathOutput) == 0){
-		return executeWithDefaultOutput(pathInput);
-	}
-	if (strcmp("-", pathInput) == 0){
-		return executeWithDefaultInput(pathOutput);
-	}
-	
 	FILE * fileInput = fopen(pathInput, "r"); // Opens an existing text file for reading purpose.
 	if (fileInput == NULL) {
 		fprintf(stderr, "[Error] El archivo de input no pudo ser abierto para lectura: %s \n", pathInput);
@@ -294,7 +279,6 @@ int executeByMenu(int argc, char *argv[]) {
 
 		// / -V
 		if (strcmp("-V", key) == 0 || strcmp("--version", key) == 0) {
-			// TODO: PREGUNTAR SI VA LA v XQ NO ESTABA EN EL INFORME
 			return executeVersion();
 		}
 
@@ -312,7 +296,7 @@ int executeByMenu(int argc, char *argv[]) {
 
 		// / -o fileOutput
 		if (strcmp("-o", key) == 0 || strcmp("--output", key) == 0) {
-			return executeWithDefaultOutput(value);
+			return executeWithDefaultInput(value);
 		}
 
 		return INCORRECT_MENU;
