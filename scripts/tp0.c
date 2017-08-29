@@ -36,88 +36,7 @@ char * toLowerCase(char * word, int quantityCharacterInWord) {
 		 */
 		char character =  word[i];
 		if (character >= 65 && character <= 90) {
-			switch (character) {
-				case 'A':
-					character = 'a';
-					break;
-				case 'B':
-					character = 'b';
-					break;
-				case 'C':
-					character = 'c';
-					break;
-				case 'D':
-					character = 'd';
-					break;
-				case 'E':
-					character = 'e';
-					break;
-				case 'F':
-					character = 'f';
-					break;
-				case 'G':
-					character = 'g';
-					break;
-				case 'H':
-					character = 'h';
-					break;
-				case 'I':
-					character = 'i';
-					break;
-				case 'J':
-					character = 'j';
-					break;
-				case 'K':
-					character = 'k';
-					break;
-				case 'L':
-					character = 'l';
-					break;
-				case 'M':
-					character = 'm';
-					break;
-				case 'N':
-					character = 'n';
-					break;
-				case 'O':
-					character = 'o';
-					break;
-				case 'P':
-					character = 'p';
-					break;
-				case 'Q':
-					character = 'q';
-					break;
-				case 'R':
-					character = 'r';
-					break;
-				case 'S':
-					character = 's';
-					break;
-				case 'T':
-					character = 't';
-					break;
-				case 'U':
-					character = 'u';
-					break;
-				case 'V':
-					character = 'v';
-					break;
-				case 'W':
-					character = 'w';
-					break;
-				case 'X':
-					character = 'x';
-					break;
-				case 'Y':
-					character = 'y';
-					break;
-				case 'Z':
-					character = 'z';
-					break;
-				default:
-					break;
-			}
+			character += 32;
 		}
 
 		wordLowerCase[i] = character;
@@ -360,7 +279,6 @@ int executeByMenu(int argc, char *argv[]) {
 
 		// / -V
 		if (strcmp("-V", key) == 0 || strcmp("--version", key) == 0) {
-			// TODO: PREGUNTAR SI VA LA v XQ NO ESTABA EN EL INFORME
 			return executeVersion();
 		}
 
