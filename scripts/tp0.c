@@ -333,12 +333,36 @@ int executeByMenu(int argc, char *argv[]) {
 		// / -i fileInput -o fileOutput
 		if ((strcmp("-i", firstKey) == 0 || strcmp("--input", firstKey) == 0)
 				&& (strcmp("-o", secondKey) == 0 || strcmp("--output", secondKey) == 0)) {
+			if (strcmp("-",firstValue) == 0 && strcmp("-",secondValue) == 0) {
+				return executeWithDefaultParameters();
+			}
+
+			if (strcmp("-",firstValue) == 0 && strcmp("-",secondValue) != 0) {
+				return executeWithDefaultInput(secondValue);
+			}
+
+			if (strcmp("-",firstValue) != 0 && strcmp("-",secondValue) == 0) {
+				return executeWithDefaultOutput(firstValue);
+			}
+
 			return executeWithParameters(firstValue, secondValue);
 		}
 
 		// / -o fileOutput -i fileInput
 		if ((strcmp("-i", secondKey) == 0 || strcmp("--input", secondKey) == 0)
 				&& (strcmp("-o", firstKey) == 0 || strcmp("--output", firstKey) == 0)) {
+			if (strcmp("-",firstValue) == 0 && strcmp("-",secondValue) == 0) {
+				return executeWithDefaultParameters();
+			}
+
+			if (strcmp("-",firstValue) == 0 && strcmp("-",secondValue) != 0) {
+				return executeWithDefaultOutput(secondValue);
+			}
+
+			if (strcmp("-",firstValue) != 0 && strcmp("-",secondValue) == 0) {
+				return executeWithDefaultInput(firstValue);
+			}
+
 			return executeWithParameters(secondValue, firstValue);
 		}
 

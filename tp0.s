@@ -63,4 +63,3 @@ $L19:
         addu    $v0,$v1,$v0
         sb      $zero,0($v0)
         lw      $v0,24($fp)
-
