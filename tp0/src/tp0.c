@@ -19,31 +19,33 @@
 
 
 enum ParameterState {
-	 OKEY = 0, INCORRECT_QUANTITY_PARAMS = 1, INCORRECT_MENU = 2, ERROR_FILE = 3
+	 OKEY = 0, INCORRECT_QUANTITY_PARAMS = 1, INCORRECT_MENU = 2, ERROR_FILE = 3, ERROR_MEMORY = 4
 };
 
 char * toLowerCase(char * word, int quantityCharacterInWord) {
 	char * wordLowerCase = (char *) malloc(quantityCharacterInWord);
+	if (wordLowerCase){
 
-	int i;
-	for (i = 0; i < quantityCharacterInWord; i++) {
-		/* ASCII:
-		 * 		A - Z = [65 - 90]
-		 * 		a - z = [97 - 122]
-		 * 		0 - 9 = [48 - 57]
-		 * 		- =  45
-		 * 		_ = 95
-		 */
-		char character =  word[i];
-		if (character >= 65 && character <= 90) {
-			character += 32;
+		int i;
+		for (i = 0; i < quantityCharacterInWord; i++) {
+			/* ASCII:
+			 * 		A - Z = [65 - 90]
+			 * 		a - z = [97 - 122]
+			 * 		0 - 9 = [48 - 57]
+			 * 		- =  45
+			 * 		_ = 95
+			 */
+			char character =  word[i];
+			if (character >= 65 && character <= 90) {
+				character += 32;
+			}
+
+			wordLowerCase[i] = character;
 		}
 
-		wordLowerCase[i] = character;
+		wordLowerCase[quantityCharacterInWord] = '\0';
+
 	}
-
-	wordLowerCase[quantityCharacterInWord] = '\0';
-
 	return wordLowerCase;
 }
 
@@ -59,6 +61,9 @@ int verifyPalindromic(char * word, int quantityCharacterInWord) {
 	}
 
 	char * wordReverse = (char *) malloc(quantityCharacterInWord);
+	if (*wordReverse == ERROR_MEMORY){
+		return ERROR_MEMORY;
+	}
 	int last = quantityCharacterInWordWithoutEnd - 1; // I take the end of word and keep in mind that it starts at zero.
 
 	int i;
@@ -71,6 +76,11 @@ int verifyPalindromic(char * word, int quantityCharacterInWord) {
 
 	char * wordInLowerCase = toLowerCase(word, quantityCharacterInWord);
 	char * wordReverseInLowerCase = toLowerCase(wordReverse, quantityCharacterInWord);
+
+	if (!wordInLowerCase || !wordReverseInLowerCase){
+		fprintf(stderr, "[Error] Hubo un error en memoria \n");
+		return ERROR_MEMORY;
+	}
 
 	int result = FALSE;
 	if (strcmp(wordInLowerCase, wordReverseInLowerCase) == 0) {
@@ -108,30 +118,45 @@ int isKeywords(char character) {
 
 int executeProcess(FILE * fileInput, FILE * fileOutput) {
 	// Precondition: Files must be open.
-	char character = fgetc(fileInput);
+	int icharacter = fgetc(fileInput);
 	char * buffer = NULL;
 	int quantityCharacterInWord = 0;
-	while (character != EOF) {
+	while (icharacter != EOF) {
+		char character = icharacter;
+
 		if (isKeywords(character) == TRUE) {
 			buffer = (char *) realloc(buffer, 1);
+			if (!buffer){
+				fprintf(stderr, "[Error] Hubo un error en memoria \n");
+				return ERROR_MEMORY;
+			}
 			buffer[quantityCharacterInWord] = character;
 			quantityCharacterInWord ++;
 		} else {
 			buffer = (char *) realloc(buffer, 1);
+			if (!buffer){
+				fprintf(stderr, "[Error] Hubo un error en memoria \n");
+				return ERROR_MEMORY;
+			}
 			buffer[quantityCharacterInWord] = '\0';
 			quantityCharacterInWord ++;
-			if (verifyPalindromic(buffer, quantityCharacterInWord) == TRUE) {
-				int result = fputs(buffer, fileOutput);
-				if (result == EOF) {
-					fprintf(stderr, "[Error] Error al escribir en el archivo output la palabra %s", buffer);
-					return ERROR_FILE;
-				}
+			int itsPalindromic = verifyPalindromic(buffer, quantityCharacterInWord);
+			if (itsPalindromic != ERROR_MEMORY){
+				if (itsPalindromic == TRUE) {
+					int result = fputs(buffer, fileOutput);
+					if (result == EOF) {
+						fprintf(stderr, "[Error] Error al escribir en el archivo output la palabra %s", buffer);
+						return ERROR_FILE;
+					}
 
-				result = fputc('\n', fileOutput);
-				if (result == EOF) {
-					fprintf(stderr, "[Error] Error al escribir en el archivo output el salto de línea.");
-					return ERROR_FILE;
+					result = fputc('\n', fileOutput);
+					if (result == EOF) {
+						fprintf(stderr, "[Error] Error al escribir en el archivo output el salto de línea.");
+						return ERROR_FILE;
+					}
 				}
+			}else{
+				return ERROR_MEMORY;
 			}
 
 			free(buffer);
@@ -139,7 +164,7 @@ int executeProcess(FILE * fileInput, FILE * fileOutput) {
 			quantityCharacterInWord = 0;
 		}
 
-		character = fgetc(fileInput);
+		icharacter = fgetc(fileInput);
 	}
 
 	return OKEY;
@@ -193,17 +218,20 @@ int executeWithDefaultOutput(char * pathInput) {
 
 	FILE * fileOutput = stdout;
 
-	int result = executeProcess(fileInput, fileOutput);
+	int executeResult = executeProcess(fileInput, fileOutput);
 
 	if (fileInput != NULL) {
-		result = fclose(fileInput);
+		int result = fclose(fileInput);
 		if (result == EOF) {
 			fprintf(stderr, "[Warning] El archivo de input no pudo ser cerrado correctamente: %s \n", pathInput);
 			return ERROR_FILE;
 		}
 	}
+	if (executeResult == ERROR_MEMORY){
+		return ERROR_MEMORY;
+	}
 
-	return result;
+	return OKEY;
 }
 
 int executeWithDefaultInput(char * pathOutput) {
@@ -215,17 +243,20 @@ int executeWithDefaultInput(char * pathOutput) {
 		return ERROR_FILE;
 	}
 
-	int result = executeProcess(fileInput, fileOutput);
+	int executeResult = executeProcess(fileInput, fileOutput);
 
 	if (fileOutput != NULL) {
-		result = fclose(fileOutput);
+		int result = fclose(fileOutput);
 		if (result == EOF) {
 			fprintf(stderr, "[Warning] El archivo de output no pudo ser cerrado correctamente: %s \n", pathOutput);
 			return ERROR_FILE;
 		}
 	}
+	if (executeResult == ERROR_MEMORY){
+		return ERROR_MEMORY;
+	}
 
-	return result;
+	return OKEY;
 }
 
 int executeWithParameters(char * pathInput, char * pathOutput) {
@@ -241,10 +272,10 @@ int executeWithParameters(char * pathInput, char * pathOutput) {
 		return ERROR_FILE;
 	}
 
-	int result = executeProcess(fileInput, fileOutput);
+	int executeResult = executeProcess(fileInput, fileOutput);
 
 	if (fileInput != NULL) {
-		result = fclose(fileInput);
+		int result = fclose(fileInput);
 		if (result == EOF) {
 			fprintf(stderr, "[Warning] El archivo de input no pudo ser cerrado correctamente: %s \n", pathInput);
 			return ERROR_FILE;
@@ -252,14 +283,17 @@ int executeWithParameters(char * pathInput, char * pathOutput) {
 	}
 
 	if (fileOutput != NULL) {
-		result = fclose(fileOutput);
+		int result = fclose(fileOutput);
 		if (result == EOF) {
 			fprintf(stderr, "[Warning] El archivo de output no pudo ser cerrado correctamente: %s \n", pathOutput);
 			return ERROR_FILE;
 		}
 	}
 
-	return result;
+	if (executeResult == ERROR_MEMORY){
+		return ERROR_MEMORY;
+	}
+	return OKEY;
 }
 
 int executeByMenu(int argc, char *argv[]) {
@@ -291,12 +325,20 @@ int executeByMenu(int argc, char *argv[]) {
 
 		// / -i fileInput
 		if (strcmp("-i", key) == 0 || strcmp("--input", key) == 0) {
-			return executeWithDefaultOutput(value);
+			if (strcmp("-",value) == 0) {
+				return executeWithDefaultParameters();
+			}else{
+				return executeWithDefaultOutput(value);
+			}
 		}
 
 		// / -o fileOutput
 		if (strcmp("-o", key) == 0 || strcmp("--output", key) == 0) {
-			return executeWithDefaultInput(value);
+			if (strcmp("-",value) == 0) {
+				return executeWithDefaultParameters();
+			}else{
+				return executeWithDefaultInput(value);
+			}
 		}
 
 		return INCORRECT_MENU;
@@ -311,13 +353,21 @@ int executeByMenu(int argc, char *argv[]) {
 	    // / -i fileInput -o fileOutput
 	    if ((strcmp("-i", firstKey) == 0 || strcmp("--input", firstKey) == 0)
 	        && (strcmp("-o", secondKey) == 0 || strcmp("--output", secondKey) == 0)) {
-	      return executeWithDefaultOutput(firstValue);
+	      	if (strcmp("-",firstValue) == 0) {
+				return executeWithDefaultParameters();
+			}else{
+	      		return executeWithDefaultOutput(firstValue);
+	      	}
 	    }
 
 	    // / -o fileOutput -i fileInput
 	    if ((strcmp("-i", secondKey) == 0 || strcmp("--input", secondKey) == 0)
 	        && (strcmp("-o", firstKey) == 0 || strcmp("--output", firstKey) == 0)) {
-	      return executeWithDefaultInput(firstValue);
+			if (strcmp("-",firstValue) == 0) {
+				return executeWithDefaultParameters();
+			}else{
+	      		return executeWithDefaultInput(firstValue);
+	  		}
 	    }
 
 	    return INCORRECT_MENU;
