@@ -61,7 +61,7 @@ int verifyPalindromic(char * word, int quantityCharacterInWord) {
 	}
 
 	char * wordReverse = (char *) malloc(quantityCharacterInWord);
-	if (*wordReverse == NULL){
+	if (wordReverse == NULL){
 		return ERROR_MEMORY;
 	}
 	int last = quantityCharacterInWordWithoutEnd - 1; // I take the end of word and keep in mind that it starts at zero.
