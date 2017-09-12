@@ -24,7 +24,7 @@ enum ParameterState {
 
 char * toLowerCase(char * word, int quantityCharacterInWord) {
 	char * wordLowerCase = (char *) malloc(quantityCharacterInWord);
-	if (wordLowerCase){
+	if (wordLowerCase != NULL){
 
 		int i;
 		for (i = 0; i < quantityCharacterInWord; i++) {
@@ -61,7 +61,7 @@ int verifyPalindromic(char * word, int quantityCharacterInWord) {
 	}
 
 	char * wordReverse = (char *) malloc(quantityCharacterInWord);
-	if (*wordReverse == ERROR_MEMORY){
+	if (*wordReverse == NULL){
 		return ERROR_MEMORY;
 	}
 	int last = quantityCharacterInWordWithoutEnd - 1; // I take the end of word and keep in mind that it starts at zero.
@@ -77,7 +77,7 @@ int verifyPalindromic(char * word, int quantityCharacterInWord) {
 	char * wordInLowerCase = toLowerCase(word, quantityCharacterInWord);
 	char * wordReverseInLowerCase = toLowerCase(wordReverse, quantityCharacterInWord);
 
-	if (!wordInLowerCase || !wordReverseInLowerCase){
+	if (wordInLowerCase == NULL || wordReverseInLowerCase == NULL){
 		fprintf(stderr, "[Error] Hubo un error en memoria \n");
 		return ERROR_MEMORY;
 	}
@@ -126,7 +126,7 @@ int executeProcess(FILE * fileInput, FILE * fileOutput) {
 
 		if (isKeywords(character) == TRUE) {
 			buffer = (char *) realloc(buffer, 1);
-			if (!buffer){
+			if (buffer == NULL){
 				fprintf(stderr, "[Error] Hubo un error en memoria \n");
 				return ERROR_MEMORY;
 			}
@@ -134,7 +134,7 @@ int executeProcess(FILE * fileInput, FILE * fileOutput) {
 			quantityCharacterInWord ++;
 		} else {
 			buffer = (char *) realloc(buffer, 1);
-			if (!buffer){
+			if (buffer == NULL){
 				fprintf(stderr, "[Error] Hubo un error en memoria \n");
 				return ERROR_MEMORY;
 			}
@@ -227,11 +227,8 @@ int executeWithDefaultOutput(char * pathInput) {
 			return ERROR_FILE;
 		}
 	}
-	if (executeResult == ERROR_MEMORY){
-		return ERROR_MEMORY;
-	}
-
-	return OKEY;
+	
+	return executeResult;
 }
 
 int executeWithDefaultInput(char * pathOutput) {
@@ -252,11 +249,8 @@ int executeWithDefaultInput(char * pathOutput) {
 			return ERROR_FILE;
 		}
 	}
-	if (executeResult == ERROR_MEMORY){
-		return ERROR_MEMORY;
-	}
-
-	return OKEY;
+	
+	return executeResult;
 }
 
 int executeWithParameters(char * pathInput, char * pathOutput) {
@@ -290,10 +284,7 @@ int executeWithParameters(char * pathInput, char * pathOutput) {
 		}
 	}
 
-	if (executeResult == ERROR_MEMORY){
-		return ERROR_MEMORY;
-	}
-	return OKEY;
+	return executeResult;
 }
 
 int executeByMenu(int argc, char *argv[]) {
