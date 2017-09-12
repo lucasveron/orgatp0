@@ -30,6 +30,30 @@ echo "#----------# FIN test ejercicio 2 del informe y salida estandar #---------
 
 echo "#-----------------------------------------------------#"
 
+echo "#----------# COMIENZA test con /-i -o - #----------#"
+
+./tp0 -i -o - <./inputs/inputInformeEjemplo2.txt > ./outputs/outputInformeEjemplo2.txt
+
+if diff -b ./outputs-aut/outputInformeEjemplo2-aut.txt ./outputs/outputInformeEjemplo2.txt; then echo "OK"; else
+		echo ERROR;
+fi
+
+echo "#----------# FIN test con /-i -o - #----------#"
+
+echo "#-----------------------------------------------------#"
+
+echo "#----------# COMIENZA test con /-o -i - #----------#"
+
+./tp0 -o -i - <./inputs/inputInformeEjemplo2.txt > ./outputs/outputInformeEjemplo2.txt
+
+if diff -b ./outputs-aut/outputInformeEjemplo2-aut.txt ./outputs/outputInformeEjemplo2.txt; then echo "OK"; else
+		echo ERROR;
+fi
+
+echo "#----------# FIN test con /-o -i - #----------#"
+
+echo "#-----------------------------------------------------#"
+
 echo "#----------# COMIENZA test palabras con acentos #----------#"
 
 ./tp0 -i ./inputs/input0.txt -o ./outputs/output0.txt
